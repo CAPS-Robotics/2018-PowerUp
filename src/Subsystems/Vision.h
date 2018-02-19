@@ -12,11 +12,16 @@ private:
 	std::vector<double> centerY;
 	std::vector<double> height;
 	std::vector<double> width;
+	cs::UsbCamera * cam0;
+	cs::UsbCamera * cam1;
+	cs::CvSink * cvsink1;
+	cs::CvSink * cvsink2;
+	cs::VideoSink server;
 public:
 	Vision();
 	void Update();
 	double GetCentralValue();
-	void InitDefaultCommand();
+	void SetCamera(int camera);
 };
 
 

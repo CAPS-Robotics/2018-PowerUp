@@ -22,13 +22,13 @@ Drivetrain::Drivetrain() : Subsystem("Drivetrain") {
 
 void Drivetrain::JoystickDrive() {
     double speedMultiplier = (1 - Robot::oi->GetSlider()) / 2;
-    if (Robot::oi->joy1->GetPOV() == 0) {
+    if(Robot::oi->joy1->GetPOV() == 0) {
         Robot::drivetrain->Drive(0, Robot::oi->GetY(), speedMultiplier);
-    } else if (Robot::oi->joy1->GetPOV() == 90) {
+    } else if(Robot::oi->joy1->GetPOV() == 90) {
         Robot::drivetrain->Drive(90, -Robot::oi->GetX(), speedMultiplier);
-    } else if (Robot::oi->joy1->GetPOV() == 180) {
+    } else if(Robot::oi->joy1->GetPOV() == 180) {
         Robot::drivetrain->Drive(180, -Robot::oi->GetY(), speedMultiplier);
-    } else if (Robot::oi->joy1->GetPOV() == 270) {
+    } else if(Robot::oi->joy1->GetPOV() == 270) {
         Robot::drivetrain->Drive(270, Robot::oi->GetX(), speedMultiplier);
     } else {
         Robot::drivetrain->CrabDrive(Robot::oi->GetX(), Robot::oi->GetY(), Robot::oi->GetTwist(), speedMultiplier, false);
@@ -87,7 +87,7 @@ void Drivetrain::CrabDrive(double x, double y, double rotation, double speedMult
     double heading = Robot::gyro->GetHeading();
     forward = -x * sin(heading * PI / 180) + y * cos(heading * PI / 180);
     strafe  =  x * cos(heading * PI / 180) + y * sin(heading * PI / 180);
-    if (x != 0 || y != 0 || rotation != 0) {
+    if(x != 0 || y != 0 || rotation != 0) {
         SmartDashboard::PutNumber("initrot", rotation);
         desiredHeading -= 8.0*rotation;
         desiredHeading = wrap(desiredHeading, -180.0, 180.0);
@@ -106,7 +106,7 @@ void Drivetrain::CrabDrive(double x, double y, double rotation, double speedMult
         SmartDashboard::PutNumber("turnv", rotation);
 	    //SmartDashboard::PutNumber("TechnicalP", rotation/this->pid->GetError());
         double back, front, right, left;
-        if (rotation != 0) {
+        if(rotation != 0) {
             back = strafe  - rotation * 1.0 / sqrt(2);
             front = strafe  + rotation * 1.0 / sqrt(2);
             right = forward - rotation * 1.0 / sqrt(2);
@@ -122,29 +122,29 @@ void Drivetrain::CrabDrive(double x, double y, double rotation, double speedMult
         double blds = sqrt(back  * back  + left  * left);
         double brds = sqrt(back  * back  + right * right);
         double maxSpeed = std::max(std::max(std::max(flds, frds), blds), brds);
-        if (maxSpeed > 1) {
+        if(maxSpeed > 1) {
             flds /= maxSpeed;
             frds /= maxSpeed;
             blds /= maxSpeed;
             brds /= maxSpeed;
         }
         double fla = 0, fra = 0, bla = 0, bra = 0;
-        if (front != 0 || left != 0) {
+        if(front != 0 || left != 0) {
             fla = fmod(360 + (180 / PI) * -atan2(front, left),  360);
         } else {
             fla = 0;
         }
-        if (front != 0 || right != 0) {
+        if(front != 0 || right != 0) {
             fra = fmod(360 + (180 / PI) * -atan2(front, right), 360);
         } else {
             fra = 0;
         }
-        if (back != 0 || left != 0) {
+        if(back != 0 || left != 0) {
             bla = fmod(360 + (180 / PI) * -atan2(back,  left),  360);
         } else {
             bla = 0;
         }
-        if (back != 0 || right != 0) {
+        if(back != 0 || right != 0) {
             bra = fmod(360 + (180 / PI) * -atan2(back,  right), 360);
         } else {
             bra = 0;

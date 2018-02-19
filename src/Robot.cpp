@@ -22,11 +22,7 @@ void Robot::RobotInit() {
     Robot::arm.reset(new Arm());
     Robot::oi.reset(new OI());
 	Robot::autonomous.reset(new Autonomous());
-	cs::UsbCamera * vidyo = new cs::UsbCamera("Vidyo", 0);
-	vidyo->SetResolution(320, 240);
-	vidyo->SetBrightness(10);
-    CameraServer::GetInstance()->StartAutomaticCapture(*vidyo);
-	this->autoPicker = new SendableChooser<AutoStations>();
+    this->autoPicker = new SendableChooser<AutoStations>();
 	this->autoPicker->AddDefault("Middle Station Auton", CENTER);
 	/*this->autoPicker->AddObject("Left Station Auton", 0);
 	this->autoPicker->AddObject("Right Station Auton", 2);*/
@@ -72,6 +68,8 @@ void Robot::AutonomousPeriodic() {
 
 void Robot::TeleopInit() {
     this->arm->cimcoder->Reset();
+    Robot::arm->targetPos = 0;
+    this->arm->armMotor->Set(0);
 }
 
 void Robot::TeleopPeriodic() {
@@ -89,6 +87,7 @@ void Robot::TeleopPeriodic() {
     SmartDashboard::PutNumber("Elevator Height", Robot::arm->cimcoder->GetDistance());
     SmartDashboard::PutNumber("Target Height", Robot::arm->targetPos);
     SmartDashboard::PutNumber("Arm Current", Robot::arm->GetCurrent());
+    SmartDashboard::PutNumber("Stick", Robot::oi->GetStick());
     //SmartDashboard::PutNumber("Desired Heading", /*Drivetrain::wrap(*/Robot::drivetrain->desiredHeading/*+180.0, -180.0, 180.0)*/);
     smp = (float)SmartDashboard::GetNumber("swerve p", 0.0);
     smi = (float)SmartDashboard::GetNumber("swerve i", 0.0);

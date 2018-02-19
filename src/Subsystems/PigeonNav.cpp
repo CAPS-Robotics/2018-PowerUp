@@ -12,7 +12,7 @@ double PigeonNav::PIDGet() {
 }
 
 void PigeonNav::SetPIDSourceType(PIDSourceType pidSource) {
-    if (wpi_assert(pidSource == PIDSourceType::kDisplacement)) {
+    if(wpi_assert(pidSource == PIDSourceType::kDisplacement)) {
         m_pidSource = pidSource;
     }
 }

@@ -15,10 +15,10 @@ Arm::Arm() {
 }
 
 void Arm::Loop() {
-    if(!Robot::oi->joy1->GetRawButton(5) && !Robot::oi->joy1->GetRawButton(3) && fabs(this->GetCurrent()) < 30) {
-        if (fabs(this->cimcoder->GetDistance() - this->targetPos) < .5) {
+    if(Robot::oi->GetStick() == 0 && fabs(this->GetCurrent()) < 30) {
+        if(fabs(this->cimcoder->GetDistance() - this->targetPos) < .5) {
             this->armMotor->Set(0);
-        } else if (this->targetPos - this->cimcoder->GetDistance() > 0) {
+        } else if(this->targetPos - this->cimcoder->GetDistance() > 0) {
             this->armMotor->Set(1);
         } else {
             this->armMotor->Set(-1);

@@ -18,52 +18,53 @@ void OI::pollButtons() {
     /*if(joy1->GetRawButton(1)) {
         while(true) {}
     }*/
-    if (joy1->GetRawButton(2)) {
+    if(joy1->GetRawButton(2)) {
         Robot::drivetrain->ReturnWheelsToZero();
     }
-    if (joy1->GetRawButton(4)) {
-        if (canPress[3]) {
-            Robot::arm->ToggleIntake();
-        }
-        canPress[3] = false;
-    } else { canPress[3] = true; }
     if(joy1->GetRawButton(3)) {
-        if (canPress[2]) {
-            Robot::arm->ToggleKick();
+        if(canPress[2]) {
+            Robot::arm->ToggleIntake();
         }
         canPress[2] = false;
     } else { canPress[2] = true; }
-    if (joy1->GetRawButton(6)) {
+    if(joy1->GetRawButton(4)) {
+        if(canPress[3]) {
+            Robot::arm->ToggleKick();
+        }
+        canPress[3] = false;
+    } else { canPress[3] = true; }
+    if(joy1->GetRawButton(6)) {
         Robot::gyro->ResetHeading();
     }
-    if (fabs(Robot::arm->GetCurrent()) < 30) {
-        if (this->GetStick() == 0) {
-            if (fabs(Robot::arm->cimcoder->GetDistance() - Robot::arm->targetPos) < .5) Robot::arm->armMotor->Set(0);
+    if(fabs(Robot::arm->GetCurrent()) < 30) {
+        if(this->GetStick() == 0) {
+            if(fabs(Robot::arm->cimcoder->GetDistance() - Robot::arm->targetPos) < .5) Robot::arm->armMotor->Set(0);
         } else {
-            Robot::arm->armMotor->Set(this->GetStick());
+            Robot::arm->armMotor->Set(-1*this->GetStick());
             Robot::arm->targetPos = Robot::arm->cimcoder->GetDistance();
         }
     }
     //Scale
-    if (buttonPad->GetRawButton(4)) {
+    if(buttonPad->GetRawButton(4)) {
         Robot::arm->MoveTo(72);
     }
-    if (buttonPad->GetRawButton(3)) {
-        Robot::arm->MoveTo(60);
+    if(buttonPad->GetRawButton(3)) {
+        Robot::arm->MoveTo(62);
     }
-    if (buttonPad->GetRawButton(2)) {
-        Robot::arm->MoveTo(48);
+
+    if(buttonPad->GetRawButton(2)) {
+        Robot::arm->MoveTo(50);
     }
     //Intake
-    if (buttonPad->GetPOV(0) == 180) {
+    if(buttonPad->GetPOV(0) == 180) {
         Robot::arm->MoveTo(0);
     }
     //Switch
-    if (buttonPad->GetPOV(0) == 90) {
-        Robot::arm->MoveTo(20);
+    if(buttonPad->GetPOV(0) == 90) {
+        Robot::arm->MoveTo(22);
     }
     //Reset
-    if (buttonPad->GetPOV(0) == 270) {
+    if(buttonPad->GetPOV(0) == 270) {
         Robot::arm->cimcoder->Reset();
         Robot::arm->targetPos = 0;
     }
@@ -87,7 +88,7 @@ double OI::GetSlider() {
 }
 
 double OI::applyDeadzone(double val, double deadzone, double maxval) {
-    if (fabs(val) <= deadzone) {
+    if(fabs(val) <= deadzone) {
         return 0;
     }
     double sign = val / fabs(val);

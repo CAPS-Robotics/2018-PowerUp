@@ -35,16 +35,16 @@ void SwerveModule::Drive(double speed, double setpoint) {
 
     double dist = setpoint - currentPos;
 
-    if (fabs(dist) > 1.25 && fabs(dist) < 3.75) {
+    if(fabs(dist) > 1.25 && fabs(dist) < 3.75) {
         setpoint = fmod(setpoint + 2.5, 5);
         speed *= -1;
     }
 
-    if (speed == 0 || fabs(speed - currentSpeed) > 1.f) {
+    if(speed == 0 || fabs(speed - currentSpeed) > 1.f) {
         currentSpeed = 0;
-    } else if (currentSpeed > speed) {
+    } else if(currentSpeed > speed) {
         currentSpeed -= 0.04;
-    } else if (currentSpeed < speed) {
+    } else if(currentSpeed < speed) {
         currentSpeed += 0.04;
     }
 
