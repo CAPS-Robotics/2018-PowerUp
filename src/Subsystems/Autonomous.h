@@ -7,7 +7,6 @@ class Autonomous {
 private:
 	int autoNum;
 	bool left;
-	bool scaleLeft
 	int state;
 	Timer *timer;
 public:

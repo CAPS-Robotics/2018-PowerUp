@@ -21,18 +21,18 @@ void OI::pollButtons() {
     if(joy1->GetRawButton(2)) {
         Robot::drivetrain->ReturnWheelsToZero();
     }
+    if(joy1->GetRawButton(1)) {
+        if(canPress[0]) {
+            Robot::arm->ToggleIntake();
+        }
+        canPress[0] = false;
+    } else { canPress[0] = true; }
     if(joy1->GetRawButton(3)) {
         if(canPress[2]) {
-            Robot::arm->ToggleIntake();
+            Robot::arm->ToggleKick();
         }
         canPress[2] = false;
     } else { canPress[2] = true; }
-    if(joy1->GetRawButton(4)) {
-        if(canPress[3]) {
-            Robot::arm->ToggleKick();
-        }
-        canPress[3] = false;
-    } else { canPress[3] = true; }
     if(joy1->GetRawButton(6)) {
         Robot::gyro->ResetHeading();
     }

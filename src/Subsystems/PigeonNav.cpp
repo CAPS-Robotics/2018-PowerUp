@@ -28,7 +28,7 @@ double PigeonNav::GetAngularRate() {
 }
 
 void PigeonNav::ResetHeading() {
-    this->gyro->SetFusedHeading(0, 20);
+    this->gyro->SetFusedHeading(180, 20);
 }
 
 PIDSourceType PigeonNav::GetPIDSourceType() const {
