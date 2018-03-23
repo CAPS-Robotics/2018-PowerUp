@@ -11,13 +11,16 @@ class Arm {
 private:
 public:
     Arm();
+	//DoubleSolenoid * speed;
     WPI_TalonSRX * armMotor;
     Intake * intake;
     Encoder * cimcoder;
     double position;
     bool intakeClosed;
     bool intakeKicked;
+	bool shifted;
     double targetPos;
+	double offset;
     void Loop();
     void ToggleIntake();
     void ToggleKick();
@@ -27,6 +30,12 @@ public:
     double GetCurrent();
 	void KickUp();
 	void KickDown();
+	//void ToggleShifter();
+	double GetPosition();
+
+	void SetPosition(double position);
+
+	void AutoLoop();
 };
 
 

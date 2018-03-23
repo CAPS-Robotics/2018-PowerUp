@@ -8,6 +8,7 @@ class OI
 public:
     OI();
     bool canPress[12];
+	bool canPress1[12];
     Joystick * joy1;
     XboxController * buttonPad;
     void pollButtons();

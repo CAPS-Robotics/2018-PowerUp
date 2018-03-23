@@ -27,32 +27,36 @@ void OI::pollButtons() {
         }
         canPress[0] = false;
     } else { canPress[0] = true; }
-    if(joy1->GetRawButton(3)) {
-        if (canPress[2]) {
+    if(buttonPad->GetRawButton(11)) {
+        if (canPress1[10]) {
             Robot::arm->ToggleKick();
         }
-        canPress[2] = false;
-    } else { canPress[2] = true; }
-    if (joy1->GetRawButton(6)) {
-        Robot::gyro->ResetHeading();
+        canPress1[10] = false;
+    } else { canPress1[10] = true; }
+	if(buttonPad->GetRawButton(4)) {
+		if (canPress1[3]) {
+			Robot::drivetrain->Shift();
+		}
+		canPress1[3] = false;
+	} else { canPress1[3] = true; }
+    if(joy1->GetRawButton(6)) {
+        Robot::gyro->ResetHeading(0);
     }
-    if (fabs(Robot::arm->GetCurrent()) < 30) {
-        if (this->GetStick() == 0) {
-            if (fabs(Robot::arm->cimcoder->GetDistance() - Robot::arm->targetPos) < .5) Robot::arm->armMotor->Set(0);
-        } else {
-            Robot::arm->armMotor->Set(this->GetStick());
-            Robot::arm->targetPos = Robot::arm->cimcoder->GetDistance();
-        }
+    if (this->GetStick() == 0) {
+        if(fabs(Robot::arm->GetPosition() - Robot::arm->targetPos) < 1) Robot::arm->armMotor->Set(0);
+    } else {
+        Robot::arm->armMotor->Set(-this->GetStick());
+        Robot::arm->targetPos = Robot::arm->GetPosition();
     }
+    if (buttonPad->GetRawButton(1)) {
+		if(canPress1[0]) {
+			Robot::vision->SetCamera(1-Robot::vision->camera);
+			canPress1[0] = false;
+		}
+	} else { canPress1[0] = true; }
     //Scale
-    if (buttonPad->GetRawButton(4)) {
-        Robot::arm->MoveTo(72);
-    }
-    if (buttonPad->GetRawButton(3)) {
-        Robot::arm->MoveTo(60);
-    }
-    if (buttonPad->GetRawButton(2)) {
-        Robot::arm->MoveTo(48);
+    if (buttonPad->GetPOV(0) == 0) {
+        Robot::arm->MoveTo(70);
     }
     //Intake
     if (buttonPad->GetPOV(0) == 180) {
@@ -60,11 +64,11 @@ void OI::pollButtons() {
     }
     //Switch
     if (buttonPad->GetPOV(0) == 90) {
-        Robot::arm->MoveTo(20);
+        Robot::arm->MoveTo(27);
     }
     //Reset
     if (buttonPad->GetPOV(0) == 270) {
-        Robot::arm->cimcoder->Reset();
+        Robot::arm->SetPosition(0);
         Robot::arm->targetPos = 0;
     }
 }

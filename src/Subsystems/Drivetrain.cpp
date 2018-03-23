@@ -14,31 +14,41 @@ Drivetrain::Drivetrain() : Subsystem("Drivetrain") {
 	this->desiredHeading = 0;
 	this->driveEnc = new Encoder(DRIVE_CIMCODER_A, DRIVE_CIMCODER_B);
 	this->driveEnc->SetDistancePerPulse(DRIVE_DIST_PER_PULSE);
+	shift = new DoubleSolenoid(PCM, SHIFT_FORWARD, SHIFT_BACKWARD);
+	speedShift = true;
+	this->SetShift(true);
 	/*this->pid = new PIDController(GYRO_P, GYRO_I, GYRO_D, Robot::gyro.get(), pidOutput, 0.002);
-	this->pid->SetContinuous(true);
+	this->pid->SetContinuous(truce);
 	this->pid->SetPercentTolerance(1);
 	this->pid->SetInputRange(-180, 180.0);
 	this->pid->SetOutputRange(-0.5, 0.5);
 	this->pid->SetEnabled(true);*/
 }
 
+void Drivetrain::Shift() {
+	speedShift = SetShift(!speedShift);
+}
+
+bool Drivetrain::SetShift(bool shifted) {
+	if(shifted) {
+		shift->Set(DoubleSolenoid::kReverse);
+	} else {
+		shift->Set(DoubleSolenoid::kForward);
+	}
+	return shifted;
+}
+
 void Drivetrain::JoystickDrive() {
 	double speedMultiplier = (1 - Robot::oi->GetSlider()) / 2;
-	if (Robot::oi->joy1->GetPOV() == 0) {
-		Robot::drivetrain->Drive(0, Robot::oi->GetY(), speedMultiplier);
-	} else if (Robot::oi->joy1->GetPOV() == 90) {
-		Robot::drivetrain->Drive(90, -Robot::oi->GetX(), speedMultiplier);
-	} else if (Robot::oi->joy1->GetPOV() == 180) {
-		Robot::drivetrain->Drive(180, -Robot::oi->GetY(), speedMultiplier);
-	} else if (Robot::oi->joy1->GetPOV() == 270) {
-		Robot::drivetrain->Drive(270, Robot::oi->GetX(), speedMultiplier);
-	} else {
+	/*if (Robot::oi->joy1->GetPOV(0) != -1) {
+		Robot::drivetrain->Drive(Robot::oi->joy1->GetPOV(0), 1, speedMultiplier);
+	} else {*/
 		Robot::drivetrain->CrabDrive(Robot::oi->GetX(), Robot::oi->GetY(), Robot::oi->GetTwist(), speedMultiplier, false);
-	}
+	//}
 }
 
 double Drivetrain::GetDistanceAway() {
-	return this->rangeFinder->GetVoltage() / 0.012446;
+	return (this->rangeFinder->GetVoltage() / 0.012446);
 }
 
 void Drivetrain::ReturnWheelsToZero() {

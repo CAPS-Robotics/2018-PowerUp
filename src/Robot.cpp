@@ -22,18 +22,23 @@ void Robot::RobotInit() {
     Robot::arm.reset(new Arm());
 	Robot::oi.reset(new OI());
 	Robot::autonomous.reset(new Autonomous());
-	this->autoPicker = new SendableChooser<AutoStations>();
-	this->autoPicker->AddDefault("Middle Station Auton", CENTER);
-	this->autoPicker->AddObject("Left Station Auton", LEFT);
-	this->autoPicker->AddObject("Right Station Auton", RIGHT);
-	SmartDashboard::PutData("Auto Picker", this->autoPicker);
+	autoNum = 0;
+	SmartDashboard::PutNumber("AutoIn", autoNum);
+	SmartDashboard::PutNumber("AutoOut", autoNum);
+	/*this->autoPicker = new SendableChooser<int>();
+	this->autoPicker->AddDefault("Middle Station Auto", 1);
+	this->autoPicker->AddObject("Left Station Both Auto", 0);
+	this->autoPicker->AddObject("Right Station Both Auto", 2);
+	this->autoPicker->AddObject("Left Station Scale Auto", 3);
+	this->autoPicker->AddObject("Right Station Scale Auto", 4);
+//	this->autoPicker->AddObject("Go Straight Auto", 5);
+	SmartDashboard::PutData("Auto Picker", this->autoPicker);*/
 	smp = SWERVE_MODULE_P;
     smi = SWERVE_MODULE_I;
     smd = SWERVE_MODULE_D;
     /*gp = GYRO_P;
     gi = GYRO_I;
     gd = GYRO_D;*/
-	SmartDashboard::PutString("Auto Picked", ""+this->autoPicker->GetSelected());
     SmartDashboard::PutNumber("swerve p", smp);
     SmartDashboard::PutNumber("swerve i", smi);
     SmartDashboard::PutNumber("swerve d", smd);
@@ -46,9 +51,8 @@ void Robot::DisabledInit() {
 
 }
 
-
 void Robot::DisabledPeriodic() {
-    SmartDashboard::PutData("Auto Picker", this->autoPicker);
+    //SmartDashboard::PutData("Auto Picker", this->autoPicker);
 	SmartDashboard::PutNumber("FL Voltage", Robot::drivetrain->fl->positionEncoder->GetVoltage());
 	SmartDashboard::PutNumber("FR Voltage", Robot::drivetrain->fr->positionEncoder->GetVoltage());
 	SmartDashboard::PutNumber("BL Voltage", Robot::drivetrain->bl->positionEncoder->GetVoltage());
@@ -57,11 +61,14 @@ void Robot::DisabledPeriodic() {
 	SmartDashboard::PutNumber("FR Angle", Robot::drivetrain->fr->GetAngle());
 	SmartDashboard::PutNumber("BL Angle", Robot::drivetrain->bl->GetAngle());
 	SmartDashboard::PutNumber("BR Angle", Robot::drivetrain->br->GetAngle());
-
+	autoNum = SmartDashboard::GetNumber("AutoIn", autoNum);
+	SmartDashboard::PutNumber("AutoOut", autoNum);
+	//vision->VisionThread();
 }
 
 void Robot::AutonomousInit() {
-	//this->autonomous->Init(/*(int)SmartDashboard::GetNumber("Auto Picked", 0)*/1, frc::DriverStation::GetInstance().GetGameSpecificMessage());
+	autoNum = SmartDashboard::GetNumber("AutoIn", autoNum);
+	this->autonomous->Init(autoNum, frc::DriverStation::GetInstance().GetGameSpecificMessage());
 }
 
 void Robot::AutonomousPeriodic() {
@@ -70,13 +77,16 @@ void Robot::AutonomousPeriodic() {
     SmartDashboard::PutNumber("BL Angle", Robot::drivetrain->bl->GetAngle());
     SmartDashboard::PutNumber("BR Angle", Robot::drivetrain->br->GetAngle());
     SmartDashboard::PutNumber("Distance Away", Robot::drivetrain->GetDistanceAway());
+	SmartDashboard::PutNumber("Travel", Robot::drivetrain->GetTravel());
     SmartDashboard::PutNumber("Heading", Robot::gyro->GetHeading());
 	SmartDashboard::PutNumber("CenterX", vision->GetCentralValue());
-	//this->autonomous->Loop();
+	//this->vision->VisionThread();
+	this->autonomous->Loop();
+	this->arm->AutoLoop();
 }
 
 void Robot::TeleopInit() {
-  this->arm->cimcoder->Reset();
+	this->arm->SetPosition(0);
 	this->drivetrain->StartTravel();
 }
 
@@ -92,9 +102,10 @@ void Robot::TeleopPeriodic() {
     SmartDashboard::PutNumber("Distance Away", Robot::drivetrain->GetDistanceAway());
     SmartDashboard::PutNumber("Heading", Robot::gyro->GetHeading());
 	SmartDashboard::PutNumber("CenterX", vision->GetCentralValue());
-    SmartDashboard::PutNumber("Elevator Height", Robot::arm->cimcoder->GetDistance());
+    SmartDashboard::PutNumber("Elevator Height", Robot::arm->GetPosition());
     SmartDashboard::PutNumber("Target Height", Robot::arm->targetPos);
     SmartDashboard::PutNumber("Arm Current", Robot::arm->GetCurrent());
+	SmartDashboard::PutNumber("Drivetrain Travel", Robot::drivetrain->GetTravel());
     //SmartDashboard::PutNumber("Desired Heading", /*Drivetrain::wrap(*/Robot::drivetrain->desiredHeading/*+180.0, -180.0, 180.0)*/);
     smp = (float)SmartDashboard::GetNumber("swerve p", 0.0);
     smi = (float)SmartDashboard::GetNumber("swerve i", 0.0);
@@ -105,8 +116,9 @@ void Robot::TeleopPeriodic() {
 
     Robot::oi->pollButtons();
     Robot::arm->Loop();
+	//Robot::vision->VisionThread();
 
-    Robot::drivetrain->JoystickDrive();
+	Robot::drivetrain->JoystickDrive();
     /*Robot::drivetrain->SetPID(gp, gi, gd);*/
     Robot::drivetrain->fl->setPID(smp, smi, smd);
     Robot::drivetrain->fr->setPID(smp, smi, smd);

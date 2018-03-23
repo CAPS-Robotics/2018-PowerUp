@@ -10,7 +10,9 @@
 class Drivetrain : public Subsystem {
 private:
     AnalogInput * rangeFinder;
+	DoubleSolenoid * shift;
 public:
+	bool speedShift;
     double desiredHeading;
     SwerveModule * fl;
     SwerveModule * fr;
@@ -32,6 +34,10 @@ public:
     void ArcadeDrive(double forward, double rotation, double speedMultiplier = 1);
     void Brake();
     static double wrap(double num, double min, double max);
+
+	void Shift();
+
+	bool SetShift(bool shifted);
 };
 
 #endif  // Drivetrain_H

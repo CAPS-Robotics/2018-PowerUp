@@ -10,6 +10,7 @@ class PigeonNav : public Subsystem, public PIDSource {
 private:
     PigeonIMU * gyro;
     double * ypr;
+	int offset;
 public:
     PigeonNav();
     double GetHeading();
@@ -17,7 +18,7 @@ public:
     double PIDGet();
     void SetPIDSourceType(PIDSourceType pidSource);
     PIDSourceType GetPIDSourceType() const;
-    void ResetHeading();
+	void ResetHeading(int head);
 };
 
 #endif  // PigeonNav_H

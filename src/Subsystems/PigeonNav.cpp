@@ -4,7 +4,7 @@
 PigeonNav::PigeonNav() : Subsystem("PigeonNav"), PIDSource() {
     this->gyro = new PigeonIMU(new TalonSRX(PIGEON_IMU_SRX));
     this->ypr = new double[3];
-    this->ResetHeading();
+    this->ResetHeading(0);
 }
 
 double PigeonNav::PIDGet() {
@@ -18,7 +18,7 @@ void PigeonNav::SetPIDSourceType(PIDSourceType pidSource) {
 }
 
 double PigeonNav::GetHeading() {
-    double angle = fmod(fmod(this->gyro->GetFusedHeading(), 360) + 360, 360);
+    double angle = fmod(fmod(this->gyro->GetFusedHeading()-offset, 360) + 360, 360);
     return angle <= 180 ? angle : -360 + angle;
 }
 
@@ -27,8 +27,9 @@ double PigeonNav::GetAngularRate() {
     return ypr[0];
 }
 
-void PigeonNav::ResetHeading() {
+void PigeonNav::ResetHeading(int head) {
     this->gyro->SetFusedHeading(0, 20);
+    this->offset = head;
 }
 
 PIDSourceType PigeonNav::GetPIDSourceType() const {

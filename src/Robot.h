@@ -10,9 +10,12 @@ class Robot: public frc::IterativeRobot {
 	enum AutoStations {
 		LEFT,
 		CENTER,
-		RIGHT
+		RIGHT,
+		SCLEFT,
+		SCRIGHT
 	};
-	SendableChooser<AutoStations> * autoPicker;
+	//SendableChooser<int> * autoPicker;
+	int autoNum;
 public:
     float smp;
     float smi;
