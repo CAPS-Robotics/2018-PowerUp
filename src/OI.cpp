@@ -64,7 +64,7 @@ void OI::pollButtons() {
     }
     //Switch
     if (buttonPad->GetPOV(0) == 90) {
-        Robot::arm->MoveTo(27);
+        Robot::arm->MoveTo(28);
     }
     //Reset
     if (buttonPad->GetPOV(0) == 270) {

@@ -28,6 +28,8 @@ public:
 	void CrossScale(bool left);
 
 	void SideAuto(bool left);
+
+	void ScaleAuto(bool left);
 };
 
 #endif //FRC2018_AUTONOMOUS_H

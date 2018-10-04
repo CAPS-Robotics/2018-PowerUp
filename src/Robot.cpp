@@ -88,6 +88,7 @@ void Robot::AutonomousPeriodic() {
 void Robot::TeleopInit() {
 	this->arm->SetPosition(0);
 	this->drivetrain->StartTravel();
+	SmartDashboard::PutNumber("AutoIn", autoNum);
 }
 
 void Robot::TeleopPeriodic() {

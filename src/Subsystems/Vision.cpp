@@ -11,12 +11,12 @@ Vision::Vision() {
 	cam0->SetResolution(320, 240);
 	cam0->SetBrightness(CAMERA_BRIGHTNESS);
 	cam0->SetFPS(10);
-	cam0->SetExposureManual(CAMERA_EXPOSURE);
+	cam0->SetExposureManual(/*CAMERA_EXPOSURE*/50);
 	cam1 = new cs::UsbCamera("cam1", 1);
 	cam1->SetResolution(320, 240);
 	cam1->SetBrightness(CAMERA_BRIGHTNESS);
 	cam1->SetFPS(10);
-	cam1->SetExposureManual(CAMERA_EXPOSURE);
+	cam1->SetExposureManual(/*CAMERA_EXPOSURE*/50);
 	CameraServer::GetInstance()->PutVideo("GRIPCam", 320, 240);
 	/*sdb0 = CameraServer::GetInstance()->PutVideo("cam0", 320, 240);
 	sdb1 = CameraServer::GetInstance()->PutVideo("cam1", 320, 240);*/
